@@ -1,6 +1,10 @@
+import 'dart:io';
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:lasco/core/component/custom_toast.dart';
 import 'package:lasco/core/component/widgets/app_button.dart';
 import 'package:lasco/core/component/widgets/app_text_field.dart';
 import 'package:lasco/core/constants/app_colors.dart';
@@ -8,10 +12,10 @@ import 'package:lasco/core/locale/app_loacl.dart';
 import 'package:lasco/core/utils/password_strength_toggle.dart';
 import 'package:lasco/features/auth/view/login_screen.dart';
 import 'package:lasco/features/auth/view/otp_verification_screen.dart';
+import 'package:lasco/features/home/view/home_screen.dart';
 
 import '../../../core/constants/navigation.dart';
 import '../../../core/utils/validator.dart';
-import '../../base/views/base_screen.dart';
 import 'cubit/sign_up_cubit.dart';
 import 'cubit/sign_up_state.dart';
 
@@ -33,6 +37,9 @@ class SignUpScreen extends StatelessWidget {
                     OtpVerificationScreen(
                         isResetPassword: true,
                         phoneNumber: cubit.phoneController.text));
+              } else if (state is SignUpError) {
+                showToast(context,
+                    message: state.errorMessage, state: ToastStates.error);
               }
             },
             child: Scaffold(
@@ -93,14 +100,19 @@ class SignUpScreen extends StatelessWidget {
                               ),
                               SizedBox(height: 20.h),
 
+                              // Brand Logo Section
+                              _buildBrandLogoSection(context, cubit),
+                              SizedBox(height: 25.h),
+
                               // Name Field
                               AppTextField(
                                 radius: BorderRadiusDirectional.circular(12.r),
                                 controller: cubit.nameController,
-                                hintText: "enter_your_name".tr(context),
-                                labelText: "name".tr(context),
+                                hintText: "enter_your_store_name".tr(context),
+                                labelText: "store_name".tr(context),
                                 validator: (value) =>
-                                    Validators.validateName(value, context),
+                                    Validators.validateRequired(value,
+                                        "store_name".tr(context), context),
                               ),
                               SizedBox(height: 25.h),
 
@@ -220,7 +232,7 @@ class SignUpScreen extends StatelessWidget {
                               SizedBox(height: 25.h),
                               InkWell(
                                 onTap: () {
-                                  navigateAndFinish(context, BaseScreen());
+                                  navigateAndFinish(context, HomeScreen());
                                 },
                                 child: Text(
                                   "login_as_guest".tr(context),
@@ -253,4 +265,287 @@ class SignUpScreen extends StatelessWidget {
       ),
     );
   }
+
+  Widget _buildBrandLogoSection(BuildContext context, SignUpCubit cubit) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "brand_logo".tr(context),
+          style: TextStyle(
+            fontSize: 14.sp,
+            fontWeight: FontWeight.w400,
+            color: AppColors.black,
+          ),
+        ),
+        SizedBox(height: 12.h),
+        BlocBuilder<SignUpCubit, SignUpState>(
+          builder: (context, state) {
+            return GestureDetector(
+              onTap: () => _showImagePickerBottomSheet(context, cubit),
+              child: Container(
+                width: double.infinity,
+                height: 56.h,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF8F8F8),
+                  borderRadius: BorderRadius.circular(12.r),
+                ),
+                child: CustomPaint(
+                  painter: DashedBorderPainter(
+                    color: Color(0xffB2B2B2),
+                    strokeWidth: 1.5,
+                    dashWidth: 8.0,
+                    dashSpace: 4.0,
+                    borderRadius: 12.r,
+                  ),
+                  child: Container(
+                    alignment: AlignmentDirectional.centerStart,
+                    width: double.infinity,
+                    height: double.infinity,
+                    child: cubit.brandLogo != null
+                        ? _buildSelectedImage(cubit.brandLogo!, cubit)
+                        : _buildUploadPlaceholder(context),
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildUploadPlaceholder(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16.w),
+      child: Text(
+        "upload_brand_logo".tr(context),
+        style: TextStyle(
+          fontSize: 14.sp,
+          fontWeight: FontWeight.w400,
+          color: Color(0xffB2B2B2),
+        ),
+      ),
+    );
+  }
+
+  void _showImagePickerBottomSheet(BuildContext context, SignUpCubit cubit) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+      ),
+      builder: (context) => Container(
+        padding: EdgeInsets.all(20.w),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 40.w,
+              height: 4.h,
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(2.r),
+              ),
+            ),
+            SizedBox(height: 20.h),
+            Text(
+              "select_image_source".tr(context),
+              style: TextStyle(
+                fontSize: 18.sp,
+                fontWeight: FontWeight.w600,
+                color: AppColors.black,
+              ),
+            ),
+            SizedBox(height: 20.h),
+            Row(
+              children: [
+                Expanded(
+                  child: _buildImageSourceOption(
+                    context,
+                    icon: Icons.photo_library_outlined,
+                    title: "gallery".tr(context),
+                    onTap: () {
+                      Navigator.pop(context);
+                      cubit.pickBrandLogo();
+                    },
+                  ),
+                ),
+                SizedBox(width: 16.w),
+                Expanded(
+                  child: _buildImageSourceOption(
+                    context,
+                    icon: Icons.camera_alt_outlined,
+                    title: "camera".tr(context),
+                    onTap: () {
+                      Navigator.pop(context);
+                      cubit.takeBrandLogoPhoto();
+                    },
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 20.h),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSelectedImage(File imageFile, SignUpCubit cubit) {
+    return Stack(
+      children: [
+        Container(
+          margin: EdgeInsets.all(4.w),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(8.r),
+            child: Image.file(
+              imageFile,
+              width: double.infinity,
+              height: double.infinity,
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+        Positioned(
+          top: 8.h,
+          right: 8.w,
+          child: GestureDetector(
+            onTap: cubit.removeBrandLogo,
+            child: Container(
+              width: 24.w,
+              height: 24.h,
+              decoration: BoxDecoration(
+                color: Colors.red,
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.2),
+                    blurRadius: 4.r,
+                    offset: Offset(0, 2.h),
+                  ),
+                ],
+              ),
+              child: Icon(
+                Icons.close,
+                color: Colors.white,
+                size: 14.sp,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildImageSourceOption(
+    BuildContext context, {
+    required IconData icon,
+    required String title,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 16.h),
+        decoration: BoxDecoration(
+          color: AppColors.orange.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(12.r),
+          border: Border.all(
+            color: AppColors.orange.withOpacity(0.2),
+            width: 1,
+          ),
+        ),
+        child: Column(
+          children: [
+            Icon(
+              icon,
+              size: 32.sp,
+              color: AppColors.orange,
+            ),
+            SizedBox(height: 8.h),
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w500,
+                color: AppColors.black,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class DashedBorderPainter extends CustomPainter {
+  final Color color;
+  final double strokeWidth;
+  final double dashWidth;
+  final double dashSpace;
+  final double borderRadius;
+
+  DashedBorderPainter({
+    required this.color,
+    required this.strokeWidth,
+    required this.dashWidth,
+    required this.dashSpace,
+    required this.borderRadius,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..strokeWidth = strokeWidth
+      ..style = PaintingStyle.stroke;
+
+    final path = Path()
+      ..addRRect(RRect.fromRectAndRadius(
+        Rect.fromLTWH(0, 0, size.width, size.height),
+        Radius.circular(borderRadius),
+      ));
+
+    final dashPath = _createDashedPath(path, dashWidth, dashSpace);
+    canvas.drawPath(dashPath, paint);
+  }
+
+  Path _createDashedPath(Path source, double dashWidth, double dashSpace) {
+    final Path dashedPath = Path();
+    final PathMetrics pathMetrics = source.computeMetrics();
+
+    for (PathMetric pathMetric in pathMetrics) {
+      double distance = 0.0;
+      bool draw = true;
+
+      while (distance < pathMetric.length) {
+        final double length = draw ? dashWidth : dashSpace;
+        if (distance + length > pathMetric.length) {
+          if (draw) {
+            dashedPath.addPath(
+              pathMetric.extractPath(distance, pathMetric.length),
+              Offset.zero,
+            );
+          }
+          break;
+        } else {
+          if (draw) {
+            dashedPath.addPath(
+              pathMetric.extractPath(distance, distance + length),
+              Offset.zero,
+            );
+          }
+          distance += length;
+          draw = !draw;
+        }
+      }
+    }
+
+    return dashedPath;
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
 }

@@ -7,7 +7,7 @@ import 'package:lasco/core/constants/app_colors.dart';
 import 'package:lasco/core/locale/app_loacl.dart';
 import 'package:lasco/features/auth/view/cubit/login_state.dart';
 import 'package:lasco/features/auth/view/sign_up_screen.dart';
-import 'package:lasco/features/base/views/base_screen.dart';
+import 'package:lasco/features/home/view/home_screen.dart';
 
 import '../../../core/constants/navigation.dart';
 import '../../../core/utils/validator.dart';
@@ -27,7 +27,7 @@ class LoginScreen extends StatelessWidget {
           return BlocListener<LoginCubit, LoginState>(
             listener: (context, state) {
               if (state is LoginSuccess) {
-                navigateAndFinish(context, BaseScreen());
+                navigateAndFinish(context, HomeScreen());
               }
             },
             child: Scaffold(
@@ -206,7 +206,7 @@ class LoginScreen extends StatelessWidget {
                               SizedBox(height: 25.h),
                               InkWell(
                                 onTap: () {
-                                  navigateAndFinish(context, BaseScreen());
+                                  navigateAndFinish(context, HomeScreen());
                                 },
                                 child: Text(
                                   "login_as_guest".tr(context),

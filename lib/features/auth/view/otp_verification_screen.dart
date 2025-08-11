@@ -9,7 +9,7 @@ import 'package:lasco/core/constants/navigation.dart';
 import 'package:lasco/core/locale/app_loacl.dart';
 import 'package:lasco/core/utils/validator.dart';
 import 'package:lasco/features/auth/view/change_password_screen.dart';
-import 'package:lasco/features/base/views/base_screen.dart';
+import 'package:lasco/features/auth/view/wating_for_approve.dart';
 import 'package:pinput/pinput.dart';
 
 import '../../offers/views/widgets/custom_app_bar.dart';
@@ -53,7 +53,7 @@ class OtpVerificationScreen extends StatelessWidget {
               if (isResetPassword == false) {
                 navigateTo(context, ChangePasswordScreen());
               } else {
-                navigateAndFinish(context, BaseScreen());
+                navigateAndFinish(context, WatingForApprove());
               }
               // Navigator.push(context, MaterialPageRoute(builder: (context) => ResetPasswordScreen()));
             } else if (state is OtpVerificationError) {

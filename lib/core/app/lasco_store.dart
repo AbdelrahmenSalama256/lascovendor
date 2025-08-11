@@ -6,8 +6,8 @@ import 'package:lasco/core/component/widgets/app_theme.dart';
 import 'package:lasco/core/cubit/global_cubit.dart';
 import 'package:lasco/core/cubit/global_state.dart';
 import 'package:lasco/core/locale/localization_settings.dart';
+import 'package:lasco/features/home/view/home_screen.dart';
 
-import '../../features/base/views/splash_screen.dart';
 import '../services/service_locator.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -51,7 +51,7 @@ class LascoStore extends StatelessWidget {
 
               //!Routing
               // home: const SplashScreen(),
-              home: SplashScreen(),
+              home: HomeScreen(),
             );
           },
         );

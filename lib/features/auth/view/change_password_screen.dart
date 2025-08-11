@@ -9,7 +9,7 @@ import 'package:lasco/core/constants/navigation.dart';
 import 'package:lasco/core/locale/app_loacl.dart';
 import 'package:lasco/core/utils/password_strength_toggle.dart';
 import 'package:lasco/core/utils/validator.dart';
-import 'package:lasco/features/base/views/base_screen.dart';
+import 'package:lasco/features/home/view/home_screen.dart';
 
 import '../../../core/component/widgets/app_text_field.dart';
 import '../../offers/views/widgets/custom_app_bar.dart';
@@ -34,7 +34,7 @@ class ChangePasswordScreen extends StatelessWidget {
                 message: 'password_changed_successfully'.tr(context),
                 state: ToastStates.success,
               );
-              navigateAndFinish(context, BaseScreen());
+              navigateAndFinish(context, HomeScreen());
             } else if (state is OtpVerificationError) {
               showToast(
                 context,

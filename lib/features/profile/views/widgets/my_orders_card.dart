@@ -50,7 +50,7 @@ class OrderCard extends StatelessWidget {
             Expanded(
               flex: 3,
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 15.h),
+                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadiusDirectional.only(
@@ -131,20 +131,30 @@ class OrderCard extends StatelessWidget {
                     Row(
                       children: [
                         Text(
-                          "total".tr(context),
-                          style: TextStyle(
-                            fontSize: 12.sp,
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.grey,
-                          ),
-                        ),
-                        const Spacer(),
-                        Text(
                           total,
                           style: TextStyle(
                             fontSize: 16.sp,
                             fontWeight: FontWeight.w400,
                             color: AppColors.orange,
+                          ),
+                        ),
+                        Spacer(),
+                        Container(
+                          width: 35.83268356323242.w,
+                          height: 34.999366760253906.h,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadiusDirectional.only(
+                              topEnd: Radius.circular(12.r),
+                              topStart: Radius.circular(12.r),
+                              bottomStart: Radius.circular(12.r),
+                              bottomEnd: Radius.circular(36.r),
+                            ),
+                            color: AppColors.orange,
+                          ),
+                          child: Icon(
+                            Icons.arrow_forward_outlined,
+                            size: 20.sp,
+                            color: AppColors.white,
                           ),
                         ),
                       ],

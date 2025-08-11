@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 
 import 'sign_up_state.dart';
 
@@ -19,6 +22,10 @@ class SignUpCubit extends Cubit<SignUpState> {
   bool isPasswordObscure = true;
   bool isStrongPassword = false;
 
+  // Brand Logo
+  File? brandLogo;
+  final ImagePicker _picker = ImagePicker();
+
   void togglePasswordVisibility() {
     isPasswordObscure = !isPasswordObscure;
     emit(SignUpPasswordVisibilityChanged(isPasswordObscure));
@@ -27,6 +34,47 @@ class SignUpCubit extends Cubit<SignUpState> {
   void toggleStrongPassword(bool value) {
     isStrongPassword = value;
     emit(SignUpStrongPasswordChanged(isStrongPassword));
+  }
+
+  Future<void> pickBrandLogo() async {
+    try {
+      final XFile? image = await _picker.pickImage(
+        source: ImageSource.gallery,
+        maxWidth: 1024,
+        maxHeight: 1024,
+        imageQuality: 80,
+      );
+
+      if (image != null) {
+        brandLogo = File(image.path);
+        emit(SignUpBrandLogoSelected(brandLogo!));
+      }
+    } catch (e) {
+      emit(SignUpError('Failed to pick image: $e'));
+    }
+  }
+
+  Future<void> takeBrandLogoPhoto() async {
+    try {
+      final XFile? image = await _picker.pickImage(
+        source: ImageSource.camera,
+        maxWidth: 1024,
+        maxHeight: 1024,
+        imageQuality: 80,
+      );
+
+      if (image != null) {
+        brandLogo = File(image.path);
+        emit(SignUpBrandLogoSelected(brandLogo!));
+      }
+    } catch (e) {
+      emit(SignUpError('Failed to take photo: $e'));
+    }
+  }
+
+  void removeBrandLogo() {
+    brandLogo = null;
+    emit(SignUpBrandLogoRemoved());
   }
 
   void signUp(BuildContext context) {

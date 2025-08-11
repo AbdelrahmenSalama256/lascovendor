@@ -1,3 +1,5 @@
+import 'dart:io';
+
 class SignUpState {}
 
 final class SignUpInitial extends SignUpState {}
@@ -20,3 +22,10 @@ class SignUpStrongPasswordChanged extends SignUpState {
   final bool isStrong;
   SignUpStrongPasswordChanged(this.isStrong);
 }
+
+class SignUpBrandLogoSelected extends SignUpState {
+  final File logoFile;
+  SignUpBrandLogoSelected(this.logoFile);
+}
+
+class SignUpBrandLogoRemoved extends SignUpState {}

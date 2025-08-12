@@ -79,45 +79,6 @@ class ProductDetailsSection extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 16.h),
-
-          // Quantity Selector
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-            decoration: BoxDecoration(
-              color: AppColors.secoundry,
-              borderRadius: BorderRadius.circular(12.r),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                GestureDetector(
-                  onTap: onDecrement,
-                  child: const Icon(
-                    Icons.remove,
-                    color: Colors.white,
-                  ),
-                ),
-                SizedBox(width: 16.w),
-                Text(
-                  "0$quantity",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                SizedBox(width: 16.w),
-                GestureDetector(
-                  onTap: onIncrement,
-                  child: const Icon(
-                    Icons.add,
-                    color: Colors.white,
-                  ),
-                ),
-              ],
-            ),
-          ),
         ],
       ),
     );

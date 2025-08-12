@@ -102,8 +102,8 @@ class ProfileCubit extends Cubit<ProfileState> {
     }
   }
 
-  void changeProfileImage(BuildContext context) {
-    showModalBottomSheet(
+  void changeProfileImage(BuildContext context) async {
+    await showModalBottomSheet(
       context: context,
       builder: (context) => ImagePickerBottomSheet(
         onCameraPressed: () {
@@ -118,8 +118,8 @@ class ProfileCubit extends Cubit<ProfileState> {
     );
   }
 
-  void showDeleteConfirmation(BuildContext context) {
-    showDialog(
+  void showDeleteConfirmation(BuildContext context) async {
+    await showDialog(
       context: context,
       builder: (context) => CustomDialog(
         imagePath: "assets/images/svg/delete-account.svg",

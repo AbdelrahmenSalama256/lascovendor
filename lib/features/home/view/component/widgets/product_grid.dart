@@ -9,6 +9,9 @@ import 'product_card.dart';
 
 class ProductGrid extends StatelessWidget {
   final String? title;
+  final String? type;
+  final VoidCallback? ontap;
+
   final List<ProductModel> products;
   final int crossAxisCount;
   final double childAspectRatio;
@@ -16,6 +19,8 @@ class ProductGrid extends StatelessWidget {
   const ProductGrid({
     super.key,
     this.title,
+    this.ontap,
+    this.type,
     required this.products,
     this.crossAxisCount = 2,
     this.childAspectRatio = 0.75,
@@ -58,15 +63,17 @@ class ProductGrid extends StatelessWidget {
               productName: product.name,
               category: product.category,
               rating: product.rating,
+              type: type,
               price: product.price,
               imageUrl: product.imageUrl,
               isOnSale: product.isOnSale,
               isFavorite: product.isFavorite,
-              ontap: () {
-                navigateTo(context, ProductDetailsScreen());
-              },
+              ontap: ontap ??
+                  () {
+                    navigateTo(context, ProductDetailsScreen());
+                  },
               onFavoritePressed: () => _onFavoritePressed(product),
-              onAddToCartPressed: () => _onAddToCartPressed(product),
+              onAddToCartPressed: ontap ?? () => _onAddToCartPressed(product),
             );
           },
         ),

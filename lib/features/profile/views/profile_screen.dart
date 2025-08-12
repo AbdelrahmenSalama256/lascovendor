@@ -78,8 +78,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void _navigateToOrders() => navigateTo(context, MyOrdersScreen());
   void _navigateToTerms() => PrintUtil.debug("Terms & Privacy tapped");
 
-  void _showLogoutDialog() {
-    showDialog(
+  void _showLogoutDialog() async {
+    await showDialog(
       context: context,
       builder: (context) => CustomDialog(
         imagePath: context.read<GlobalCubit>().language == "ar"

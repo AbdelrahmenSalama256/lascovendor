@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lasco/core/constants/app_colors.dart';
 
 class OfferGridCard extends StatelessWidget {
   final String title;
   final String category;
+  final String? type;
   final String? imageUrl; // Optional image URL, similar to ProductCard
   final VoidCallback? onPressed;
 
@@ -13,6 +15,7 @@ class OfferGridCard extends StatelessWidget {
     required this.title,
     required this.category,
     this.imageUrl,
+    this.type,
     this.onPressed,
   });
 
@@ -83,11 +86,16 @@ class OfferGridCard extends StatelessWidget {
                             bottomEnd: Radius.circular(25.r),
                           ),
                         ),
-                        child: Icon(
-                          Icons.arrow_forward_outlined,
-                          color: AppColors.white,
-                          size: 20.sp,
-                        ),
+                        child: type == "vendor"
+                            ? SvgPicture.asset(
+                                "assets/images/svg/edit.svg",
+                                color: AppColors.white,
+                              )
+                            : Icon(
+                                Icons.arrow_forward_outlined,
+                                color: AppColors.white,
+                                size: 20.sp,
+                              ),
                       ),
                     ),
                   ],

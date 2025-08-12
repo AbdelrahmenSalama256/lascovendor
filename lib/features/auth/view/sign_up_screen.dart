@@ -9,10 +9,8 @@ import 'package:lasco/core/component/widgets/app_button.dart';
 import 'package:lasco/core/component/widgets/app_text_field.dart';
 import 'package:lasco/core/constants/app_colors.dart';
 import 'package:lasco/core/locale/app_loacl.dart';
-import 'package:lasco/core/utils/password_strength_toggle.dart';
 import 'package:lasco/features/auth/view/login_screen.dart';
 import 'package:lasco/features/auth/view/otp_verification_screen.dart';
-import 'package:lasco/features/home/view/home_screen.dart';
 
 import '../../../core/constants/navigation.dart';
 import '../../../core/utils/validator.dart';
@@ -105,10 +103,11 @@ class SignUpScreen extends StatelessWidget {
                               SizedBox(height: 25.h),
 
                               // Name Field
+                              // Store Name Field
                               AppTextField(
                                 radius: BorderRadiusDirectional.circular(12.r),
-                                controller: cubit.nameController,
-                                hintText: "enter_your_store_name".tr(context),
+                                controller: cubit.storeNameController,
+                                hintText: "enter_store_name".tr(context),
                                 labelText: "store_name".tr(context),
                                 validator: (value) =>
                                     Validators.validateRequired(value,
@@ -116,36 +115,35 @@ class SignUpScreen extends StatelessWidget {
                               ),
                               SizedBox(height: 25.h),
 
-                              // Phone Field
+// Phone Number Field
                               AppTextField(
-                                controller: cubit.phoneController,
                                 radius: BorderRadiusDirectional.circular(12.r),
-                                hintText: "enter_your_phone".tr(context),
-                                labelText: "phone".tr(context),
+                                controller: cubit.phoneController,
+                                hintText: "enter_phone_number".tr(context),
+                                labelText: "phone_number".tr(context),
                                 keyboardType: TextInputType.phone,
                                 validator: (value) =>
                                     Validators.validatePhone(value, context),
                               ),
                               SizedBox(height: 25.h),
 
-                              // Password Field
-                              PasswordFieldWithToggle(
-                                isEnabled: true,
-                                isPasswordObscure: cubit.isPasswordObscure,
-                                togglePasswordVisibility:
-                                    cubit.togglePasswordVisibility,
-                                onChanged: (value) {},
+// Password Field
+                              AppTextField(
+                                radius: BorderRadiusDirectional.circular(12.r),
                                 controller: cubit.passwordController,
-                                hintText: "enter_your_password".tr(context),
+                                hintText: "enter_password".tr(context),
                                 labelText: "password".tr(context),
+                                obscureText: true,
+                                validator: (value) =>
+                                    Validators.validatePassword(value, context),
                               ),
                               SizedBox(height: 25.h),
 
-                              // Confirm Password Field
+// Confirm Password Field
                               AppTextField(
-                                controller: cubit.confirmPasswordController,
                                 radius: BorderRadiusDirectional.circular(12.r),
-                                hintText: "confirm_your_password".tr(context),
+                                controller: cubit.confirmPasswordController,
+                                hintText: "confirm_password".tr(context),
                                 labelText: "confirm_password".tr(context),
                                 obscureText: true,
                                 validator: (value) =>
@@ -154,11 +152,64 @@ class SignUpScreen extends StatelessWidget {
                               ),
                               SizedBox(height: 25.h),
 
-                              // Sign Up Button
+// Store Address Field
+                              AppTextField(
+                                radius: BorderRadiusDirectional.circular(12.r),
+                                controller: cubit.storeAddressController,
+                                hintText: "enter_store_address".tr(context),
+                                labelText: "store_address".tr(context),
+                                validator: (value) =>
+                                    Validators.validateRequired(value,
+                                        "store_address".tr(context), context),
+                              ),
+                              SizedBox(height: 25.h),
+
+// Store Description Field
+                              AppTextField(
+                                radius: BorderRadiusDirectional.circular(12.r),
+                                controller: cubit.storeDescriptionController,
+                                hintText: "store_description".tr(context),
+                                labelText: "store_description".tr(context),
+                                maxLines: 3,
+                                validator: (value) =>
+                                    Validators.validateRequired(
+                                        value,
+                                        "store_description".tr(context),
+                                        context),
+                              ),
+                              SizedBox(height: 25.h),
+
+// Brand Category Dropdown
+                              DropdownButtonFormField<String>(
+                                decoration: InputDecoration(
+                                  filled: true,
+                                  fillColor: Color(0xFFF8F8F8),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12.r),
+                                    borderSide: BorderSide.none,
+                                  ),
+                                ),
+                                hint: Text("brand_category".tr(context)),
+                                value: cubit.selectedCategory,
+                                onChanged: (value) =>
+                                    cubit.setBrandCategory(value),
+                                items: cubit.categories
+                                    .map((category) => DropdownMenuItem(
+                                          value: category,
+                                          child: Text(category),
+                                        ))
+                                    .toList(),
+                                validator: (value) => value == null
+                                    ? "select_brand_category".tr(context)
+                                    : null,
+                              ),
+                              SizedBox(height: 25.h),
+
+// Sign Up Button
                               AppButton(
-                                text: "text_sign_up".tr(context),
-                                onPressed: () => cubit.signUp(context),
+                                text: "sign_up".tr(context),
                                 backgroundColor: AppColors.orange,
+                                onPressed: () => cubit.signUp,
                               ),
                               SizedBox(height: 25.h),
 
@@ -197,53 +248,6 @@ class SignUpScreen extends StatelessWidget {
                                     ),
                                   ),
                                 ],
-                              ),
-                              SizedBox(height: 25.h),
-
-                              // Divider with "or"
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Divider(
-                                      color: Color(0xffF7F7F7),
-                                      height: 1.h,
-                                    ),
-                                  ),
-                                  SizedBox(width: 8.w),
-                                  Text(
-                                    "or".tr(context),
-                                    style: TextStyle(
-                                      fontSize: 10.sp,
-                                      fontWeight: FontWeight.w400,
-                                      color: AppColors.black,
-                                    ),
-                                  ),
-                                  SizedBox(width: 8.w),
-                                  Expanded(
-                                    child: Divider(
-                                      color: Color(0xffF7F7F7),
-                                      height: 1.h,
-                                    ),
-                                  ),
-                                ],
-                              ),
-
-                              // Login as guest
-                              SizedBox(height: 25.h),
-                              InkWell(
-                                onTap: () {
-                                  navigateAndFinish(context, HomeScreen());
-                                },
-                                child: Text(
-                                  "login_as_guest".tr(context),
-                                  style: TextStyle(
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w400,
-                                    decoration: TextDecoration.underline,
-                                    decorationColor: AppColors.orange,
-                                    color: AppColors.orange,
-                                  ),
-                                ),
                               ),
 
                               // Space for keyboard
@@ -329,8 +333,9 @@ class SignUpScreen extends StatelessWidget {
     );
   }
 
-  void _showImagePickerBottomSheet(BuildContext context, SignUpCubit cubit) {
-    showModalBottomSheet(
+  void _showImagePickerBottomSheet(
+      BuildContext context, SignUpCubit cubit) async {
+    await showModalBottomSheet(
       context: context,
       backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(

@@ -9,7 +9,9 @@ import 'package:lasco/core/locale/app_loacl.dart';
 
 class BusinessMenuItems extends StatelessWidget {
   final bool notificationsEnabled;
+  final String selectedLanguage;
   final ValueChanged<bool> onNotificationChanged;
+  final ValueChanged<String> onLanguageChanged;
   final VoidCallback onEditPressed;
   final VoidCallback onAddProductPressed;
   final VoidCallback onAddOfferPressed;
@@ -19,7 +21,9 @@ class BusinessMenuItems extends StatelessWidget {
   const BusinessMenuItems({
     super.key,
     required this.notificationsEnabled,
+    required this.selectedLanguage,
     required this.onNotificationChanged,
+    required this.onLanguageChanged,
     required this.onEditPressed,
     required this.onAddProductPressed,
     required this.onAddOfferPressed,
@@ -122,6 +126,23 @@ class BusinessMenuItems extends StatelessWidget {
             ),
             onTap: () => onNotificationChanged(!notificationsEnabled),
           ),
+          _buildMenuItem(
+            icon: SvgPicture.asset(
+              "assets/images/svg/translate.svg",
+              width: 16.w,
+              height: 16.h,
+            ),
+            title: "language".tr(context),
+            trailing: Text(
+              selectedLanguage,
+              style: TextStyle(
+                fontSize: 14.sp,
+                color: AppColors.orange,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            onTap: () => _showLanguageDialog(context),
+          ),
         ],
       ),
     );
@@ -174,6 +195,37 @@ class BusinessMenuItems extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  void _showLanguageDialog(BuildContext context) async {
+    await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text("select_language".tr(context)),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _buildLanguageOption(context, "العربية", "Arabic"),
+            _buildLanguageOption(context, "English", "English"),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLanguageOption(
+      BuildContext context, String language, String englishName) {
+    return ListTile(
+      title: Text(language),
+      subtitle: Text(englishName),
+      trailing: selectedLanguage == language
+          ? Icon(Icons.check, color: AppColors.orange)
+          : null,
+      onTap: () {
+        onLanguageChanged(language);
+        Navigator.pop(context);
+      },
     );
   }
 }

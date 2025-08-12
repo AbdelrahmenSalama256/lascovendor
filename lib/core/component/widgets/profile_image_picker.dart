@@ -1,11 +1,11 @@
 import 'dart:io';
 
-import 'package:lasco/core/constants/app_colors.dart';
-import 'package:lasco/core/locale/app_loacl.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:lasco/core/constants/app_colors.dart';
+import 'package:lasco/core/locale/app_loacl.dart';
 
 import '../custom_toast.dart';
 
@@ -49,8 +49,8 @@ class ProfileImagePicker extends StatelessWidget {
     }
   }
 
-  void _showImageSourceDialog(BuildContext context) {
-    showModalBottomSheet(
+  void _showImageSourceDialog(BuildContext context) async {
+    await showModalBottomSheet(
       context: context,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(16.r)),

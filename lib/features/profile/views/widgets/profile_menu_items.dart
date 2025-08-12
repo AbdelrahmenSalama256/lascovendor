@@ -149,8 +149,8 @@ class ProfileMenuItems extends StatelessWidget {
     );
   }
 
-  void _showLanguageDialog(BuildContext context) {
-    showDialog(
+  void _showLanguageDialog(BuildContext context) async {
+    await showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: Text("select_language".tr(context)),

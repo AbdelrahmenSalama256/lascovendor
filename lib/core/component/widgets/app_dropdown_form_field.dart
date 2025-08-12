@@ -1,5 +1,5 @@
-import 'package:lasco/core/component/widgets/app_dropdown.dart';
 import 'package:flutter/material.dart';
+import 'package:lasco/core/component/widgets/app_dropdown.dart';
 
 class AppDropdownFormField extends FormField<String> {
   AppDropdownFormField({
@@ -26,7 +26,6 @@ class AppDropdownFormField extends FormField<String> {
                     state.didChange(value);
                   },
                   validator: validator,
-                  showErrorBorder: state.hasError,
                 ),
                 if (state.hasError)
                   Padding(

@@ -16,6 +16,8 @@ class ProductCard extends StatelessWidget {
   final VoidCallback? ontap;
   final VoidCallback? onAddToCartPressed;
   final Color? saleTagColor;
+  final String? type;
+
   final Color? addToCartColor;
 
   const ProductCard({
@@ -25,6 +27,7 @@ class ProductCard extends StatelessWidget {
     required this.rating,
     required this.price,
     this.imageUrl,
+    this.type,
     this.isOnSale = false,
     this.ontap,
     this.isFavorite = false,
@@ -278,11 +281,16 @@ class ProductCard extends StatelessWidget {
             bottomEnd: Radius.circular(25.r),
           ),
         ),
-        child: SvgPicture.asset(
-          "assets/images/svg/bag.svg",
-          width: 18.3330020904541.w,
-          height: 19.999637603759766.h,
-        ),
+        child: type == "vendor"
+            ? SvgPicture.asset(
+                "assets/images/svg/edit.svg",
+                color: AppColors.white,
+              )
+            : SvgPicture.asset(
+                "assets/images/svg/bag.svg",
+                width: 18.3330020904541.w,
+                height: 19.999637603759766.h,
+              ),
       ),
     );
   }

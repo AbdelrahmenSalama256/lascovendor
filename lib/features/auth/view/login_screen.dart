@@ -174,52 +174,6 @@ class LoginScreen extends StatelessWidget {
                               ),
                               SizedBox(height: 25.h),
 
-                              // Divider with "or"
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Divider(
-                                      color: Color(0xffF7F7F7),
-                                      height: 1.h,
-                                    ),
-                                  ),
-                                  SizedBox(width: 8.w),
-                                  Text(
-                                    "or".tr(context),
-                                    style: TextStyle(
-                                      fontSize: 10.sp,
-                                      fontWeight: FontWeight.w400,
-                                      color: AppColors.black,
-                                    ),
-                                  ),
-                                  SizedBox(width: 8.w),
-                                  Expanded(
-                                    child: Divider(
-                                      color: Color(0xffF7F7F7),
-                                      height: 1.h,
-                                    ),
-                                  ),
-                                ],
-                              ),
-
-                              // Login as guest
-                              SizedBox(height: 25.h),
-                              InkWell(
-                                onTap: () {
-                                  navigateAndFinish(context, HomeScreen());
-                                },
-                                child: Text(
-                                  "login_as_guest".tr(context),
-                                  style: TextStyle(
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w400,
-                                    decoration: TextDecoration.underline,
-                                    decorationColor: AppColors.orange,
-                                    color: AppColors.orange,
-                                  ),
-                                ),
-                              ),
-
                               // Space for keyboard
                               SizedBox(
                                 height:

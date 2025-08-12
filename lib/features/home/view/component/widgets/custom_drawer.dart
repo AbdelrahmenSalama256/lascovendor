@@ -4,14 +4,16 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lasco/core/component/widgets/app_custom_dialog.dart';
 import 'package:lasco/core/constants/app_colors.dart';
 import 'package:lasco/core/constants/navigation.dart';
-import 'package:lasco/core/constants/widgets/print_util.dart';
 import 'package:lasco/core/cubit/global_cubit.dart';
 import 'package:lasco/core/locale/app_loacl.dart';
 import 'package:lasco/features/auth/view/sign_up_screen.dart';
 import 'package:lasco/features/brand/views/brand_details.dart';
+import 'package:lasco/features/brand/views/offers_product_screen.dart';
 import 'package:lasco/features/product/views/add_product_screen.dart';
 import 'package:lasco/features/profile/views/edit_profile_screen.dart';
+import 'package:lasco/features/profile/views/my_orders_screen.dart';
 
+import '../../../../offers/views/add_offers_screen.dart';
 import 'business_menu_items.dart';
 
 class CustomDrawer extends StatefulWidget {
@@ -23,6 +25,7 @@ class CustomDrawer extends StatefulWidget {
 
 class _CustomDrawerState extends State<CustomDrawer> {
   bool notificationsEnabled = true;
+  String selectedLanguage = "العربية";
 
   @override
   Widget build(BuildContext context) {
@@ -43,8 +46,13 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     SizedBox(height: 20.h),
                     BusinessMenuItems(
                       notificationsEnabled: notificationsEnabled,
+                      selectedLanguage: selectedLanguage,
                       onNotificationChanged: (value) {
                         setState(() => notificationsEnabled = value);
+                      },
+                      onLanguageChanged: (language) {
+                        setState(() => selectedLanguage = language);
+                        context.read<GlobalCubit>().changeLanguage();
                       },
                       onEditPressed: () {
                         navigateTo(context, EditProfileScreen());
@@ -52,9 +60,24 @@ class _CustomDrawerState extends State<CustomDrawer> {
                       onAddProductPressed: () {
                         navigateTo(context, AddProductScreen());
                       },
-                      onAddOfferPressed: _navigateToAddOffer,
-                      onProductsOffersPressed: _navigateToProductsOffers,
-                      onOrdersPressed: _navigateToOrders,
+                      onAddOfferPressed: () {
+                        navigateTo(context, AddOffersScreen());
+                      },
+                      onProductsOffersPressed: () {
+                        navigateTo(
+                            context,
+                            OffersProductScreen(
+                              brand: BrandDetailsModel(
+                                  id: '0',
+                                  name: 'Mazaya',
+                                  logoText: 'Mazaya',
+                                  categories: 'Mazaya',
+                                  address: 'Mazaya'),
+                            ));
+                      },
+                      onOrdersPressed: () {
+                        navigateTo(context, MyOrdersScreen());
+                      },
                     ),
                     SizedBox(height: 20.h),
                   ],
@@ -76,32 +99,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
     );
   }
 
-  void _navigateToAddProduct() {
-    Navigator.pop(context);
-    // Add navigation logic
-    PrintUtil.debug("Navigate to Add Product");
-  }
-
-  void _navigateToAddOffer() {
-    Navigator.pop(context);
-    // Add navigation logic
-    PrintUtil.debug("Navigate to Add Offer");
-  }
-
-  void _navigateToProductsOffers() {
-    Navigator.pop(context);
-    // Add navigation logic
-    PrintUtil.debug("Navigate to Products & Offers");
-  }
-
-  void _navigateToOrders() {
-    Navigator.pop(context);
-    // Add navigation logic
-    PrintUtil.debug("Navigate to Orders");
-  }
-
-  void _showLogoutDialog() {
-    showDialog(
+  void _showLogoutDialog() async {
+    await showDialog(
       context: context,
       builder: (context) => CustomDialog(
         imagePath: context.read<GlobalCubit>().language == "ar"
@@ -148,17 +147,19 @@ class BusinessProfileHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        SizedBox(
+          height: 10.h,
+        ),
         Container(
-          width: 112.w,
-          height: 112.w,
+          width: 84.w,
+          height: 84.h,
           decoration: BoxDecoration(
             color: Colors.black,
             borderRadius: BorderRadius.circular(16.r),
           ),
           child: Image.asset(
             "assets/images/png/maz.png",
-            width: 84.w,
-            height: 84.h,
+            fit: BoxFit.contain,
           ),
         ),
         SizedBox(height: 16.h),

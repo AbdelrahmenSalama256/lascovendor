@@ -8,6 +8,8 @@ class OrderDetailsSection extends StatelessWidget {
   final double shipping;
   final double discount;
   final double total;
+  final double paid;
+  final double remaining;
 
   const OrderDetailsSection({
     super.key,
@@ -15,6 +17,8 @@ class OrderDetailsSection extends StatelessWidget {
     required this.shipping,
     required this.discount,
     required this.total,
+    required this.paid,
+    required this.remaining,
   });
 
   @override
@@ -32,8 +36,8 @@ class OrderDetailsSection extends StatelessWidget {
           Text(
             "order_details".tr(context),
             style: TextStyle(
-              fontSize: 14.sp,
-              fontWeight: FontWeight.w400,
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w600,
               color: AppColors.black,
             ),
           ),
@@ -52,34 +56,19 @@ class OrderDetailsSection extends StatelessWidget {
           SizedBox(height: 16.h),
           Divider(color: Colors.grey[300]),
           SizedBox(height: 16.h),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "total".tr(context),
-                style: TextStyle(
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.black,
-                ),
-              ),
-              Text(
-                "${total.toInt()} LE",
-                style: TextStyle(
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.black,
-                ),
-              ),
-            ],
-          ),
+          _buildOrderDetailRow("Paid", "${paid.toInt()} LE", isPaid: true),
+          SizedBox(height: 8.h),
+          _buildOrderDetailRow("Remaining", "${remaining.toInt()} LE",
+              isRemaining: true),
         ],
       ),
     );
   }
 
   Widget _buildOrderDetailRow(String label, String value,
-      {bool isDiscount = false}) {
+      {bool isDiscount = false,
+      bool isPaid = false,
+      bool isRemaining = false}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -87,16 +76,25 @@ class OrderDetailsSection extends StatelessWidget {
           label,
           style: TextStyle(
             fontSize: 14.sp,
-            color: AppColors.grey,
-            fontWeight: FontWeight.w400,
+            color: isRemaining ? AppColors.orange : AppColors.black,
+            fontWeight:
+                isPaid || isRemaining ? FontWeight.w600 : FontWeight.w400,
           ),
         ),
         Text(
           value,
           style: TextStyle(
             fontSize: 14.sp,
-            color: isDiscount ? Colors.green : Colors.grey[600],
-            fontWeight: isDiscount ? FontWeight.w600 : FontWeight.normal,
+            color: isDiscount
+                ? Colors.green
+                : isRemaining
+                    ? AppColors.orange
+                    : isPaid
+                        ? AppColors.black
+                        : Colors.grey[600],
+            fontWeight: isDiscount || isPaid || isRemaining
+                ? FontWeight.w600
+                : FontWeight.normal,
           ),
         ),
       ],

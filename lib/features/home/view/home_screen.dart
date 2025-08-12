@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lasco/core/constants/navigation.dart';
@@ -6,6 +7,7 @@ import 'package:lasco/features/home/view/component/widgets/custom_drawer.dart';
 import 'package:lasco/features/notification/views/notifications_screen.dart';
 
 import '../../../core/constants/app_colors.dart';
+import '../../../core/cubit/global_cubit.dart';
 import 'component/header.dart';
 import 'component/metrics_grid.dart';
 import 'component/new_orders_section.dart';
@@ -36,9 +38,14 @@ class HomeScreen extends StatelessWidget {
                       onTap: () {
                         _scaffoldKey.currentState?.openDrawer();
                       },
-                      child: SvgPicture.asset(
-                        "assets/images/svg/menu.svg",
-                        width: 24.w,
+                      child: Transform.flip(
+                        flipX: context.read<GlobalCubit>().language == "ar"
+                            ? true
+                            : false,
+                        child: SvgPicture.asset(
+                          "assets/images/svg/menu.svg",
+                          width: 24.w,
+                        ),
                       ),
                     ),
                     GestureDetector(

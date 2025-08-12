@@ -24,9 +24,7 @@ class NewOrdersSection extends StatelessWidget {
               ),
             ),
             GestureDetector(
-              onTap: () {
-                // TODO: navigate to all orders page
-              },
+              onTap: () {},
               child: Text(
                 "view_all".tr(context),
                 style: TextStyle(

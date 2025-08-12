@@ -1,4 +1,4 @@
-// lib/features/products/views/add_product_screen.dart
+// lib/features/offers/views/add_offers_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,40 +8,39 @@ import 'package:lasco/core/constants/app_colors.dart';
 import 'package:lasco/core/locale/app_loacl.dart';
 import 'package:lasco/features/offers/views/widgets/custom_app_bar.dart';
 
-import '../../offers/views/widgets/apply_sale_toggle.dart';
-import '../../offers/views/widgets/category_dropdown.dart';
-import '../../offers/views/widgets/image_upload_widget.dart';
-import 'cubit/product_cubit.dart';
-import 'cubit/product_state.dart';
+import 'cubit/offers_cubit.dart';
+import 'cubit/offers_state.dart';
+import 'widgets/apply_sale_toggle.dart';
+import 'widgets/category_dropdown.dart';
+import 'widgets/image_upload_widget.dart';
 
-class AddProductScreen extends StatelessWidget {
-  const AddProductScreen({super.key});
+class AddOffersScreen extends StatelessWidget {
+  const AddOffersScreen({super.key});
 
-  @override
+@override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ProductCubit(),
+      create: (context) => OffersCubit(),
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: CustomAppBar(
-          title: 'add_product'.tr(context),
+          title: 'add_offer'.tr(context),
         ),
-        body: BlocConsumer<ProductCubit, ProductState>(
+        body: BlocConsumer<OffersCubit, OffersState>(
           listener: (context, state) {
-            if (state is ProductAddedSuccessfully) {
+            if (state is OffersAddedSuccessfully) {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                    content: Text('product_added_successfully'.tr(context))),
+                SnackBar(content: Text('offer_added_successfully'.tr(context))),
               );
               Navigator.pop(context);
-            } else if (state is ProductError) {
+            } else if (state is OffersError) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text(state.message)),
               );
             }
           },
           builder: (context, state) {
-            final cubit = context.read<ProductCubit>();
+            final cubit = context.read<OffersCubit>();
             final categories = [
               'Category',
               'Electronics',
@@ -59,34 +58,34 @@ class AddProductScreen extends StatelessWidget {
                 children: [
                   // Image Upload Section
                   ImageUploadWidget(
-                    productImages: state.productImages,
+                    productImages: state.offersImages,
                     onAddImage: cubit.pickImages,
                     onRemoveImage: cubit.removeImage,
                   ),
                   SizedBox(height: 24.h),
 
-                  // Product Name
+                  // Offer Name
                   AppTextField(
                     controller: state.nameController,
-                    onChanged: cubit.updateProductName,
-                    hintText: 'product_name'.tr(context),
-                    labelText: 'product_name'.tr(context),
+                    onChanged: cubit.updateOfferName,
+                    hintText: 'offer_name'.tr(context),
+                    labelText: 'offer_name'.tr(context),
                     radius: BorderRadiusDirectional.circular(12.r),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'please_enter_product_name'.tr(context);
+                        return 'please_enter_offer_name'.tr(context);
                       }
                       return null;
                     },
                   ),
                   SizedBox(height: 16.h),
 
-                  // Product Price
+                  // Offer Price
                   AppTextField(
                     controller: state.priceController,
-                    onChanged: cubit.updateProductPrice,
-                    hintText: 'product_price'.tr(context),
-                    labelText: 'product_price'.tr(context),
+                    onChanged: cubit.updateOfferPrice,
+                    hintText: 'offer_price'.tr(context),
+                    labelText: 'offer_price'.tr(context),
                     keyboardType: TextInputType.number,
                     radius: BorderRadiusDirectional.circular(12.r),
                     suffixIcon: Padding(
@@ -101,7 +100,7 @@ class AddProductScreen extends StatelessWidget {
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'please_enter_product_price'.tr(context);
+                        return 'please_enter_offer_price'.tr(context);
                       }
                       return null;
                     },
@@ -119,13 +118,13 @@ class AddProductScreen extends StatelessWidget {
                   AppTextField(
                     controller: state.descriptionController,
                     onChanged: cubit.updateDescription,
-                    hintText: 'product_description'.tr(context),
+                    hintText: 'offer_description'.tr(context),
                     labelText: 'description'.tr(context),
                     maxLines: 4,
                     radius: BorderRadiusDirectional.circular(12.r),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'please_enter_product_description'.tr(context);
+                        return 'please_enter_offer_description'.tr(context);
                       }
                       return null;
                     },
@@ -170,13 +169,12 @@ class AddProductScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 32.h),
 
-                  // Add Product Button
+                  // Add Offer Button
                   AppButton(
-                    text: 'add_product'.tr(context),
+                    text: 'add_offer'.tr(context),
                     backgroundColor: AppColors.orange,
-                    onPressed:
-                        state is ProductLoading ? null : cubit.addProduct,
-                    isLoading: state is ProductLoading,
+                    onPressed: state is OffersLoading ? null : cubit.addOffer,
+                    isLoading: state is OffersLoading,
                   ),
                 ],
               ),

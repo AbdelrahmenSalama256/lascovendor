@@ -29,3 +29,8 @@ class SignUpBrandLogoSelected extends SignUpState {
 }
 
 class SignUpBrandLogoRemoved extends SignUpState {}
+
+class SignUpCategoryChanged extends SignUpState {
+  final String? selectedCategory;
+  SignUpCategoryChanged(this.selectedCategory);
+}

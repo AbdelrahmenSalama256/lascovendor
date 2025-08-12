@@ -10,10 +10,26 @@ class SignUpCubit extends Cubit<SignUpState> {
   SignUpCubit() : super(SignUpInitial());
 
   // Controllers
-  final nameController = TextEditingController();
+  final storeNameController = TextEditingController();
   final phoneController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
+  final storeAddressController = TextEditingController();
+  final storeDescriptionController = TextEditingController();
+
+  // Brand Category
+  String? selectedCategory;
+  final List<String> categories = [
+    "Food & Beverage",
+    "Clothing",
+    "Electronics",
+    "Health & Beauty",
+  ];
+
+  void setBrandCategory(String? category) {
+    selectedCategory = category;
+    emit(SignUpCategoryChanged(selectedCategory));
+  }
 
   // Form Key
   final formKey = GlobalKey<FormState>();
@@ -86,10 +102,12 @@ class SignUpCubit extends Cubit<SignUpState> {
 
   @override
   Future<void> close() {
-    nameController.dispose();
+    storeNameController.dispose();
     phoneController.dispose();
     passwordController.dispose();
     confirmPasswordController.dispose();
+    storeAddressController.dispose();
+    storeDescriptionController.dispose();
     return super.close();
   }
 }

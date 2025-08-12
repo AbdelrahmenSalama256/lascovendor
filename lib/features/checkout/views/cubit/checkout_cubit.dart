@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../profile/data/models/order_details_model.dart';
-import '../order_comfrimation_screen.dart';
+import '../../../profile/views/order_details_screen.dart';
 import '../widgets/address_bottom_sheet.dart';
 import 'checkout_state.dart';
 
@@ -44,6 +44,7 @@ class CheckoutCubit extends Cubit<CheckoutState> {
   ];
   String? orderId;
   String? orderDate;
+  bool isAccepted = false;
 
   double get total => subtotal + shipping - discount;
 
@@ -65,21 +66,70 @@ class CheckoutCubit extends Cubit<CheckoutState> {
     // Generate order ID and date
     orderId = "123456";
     orderDate = "Mon 4 August, 2025";
-
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => BlocProvider(
-          create: (context) => CheckoutCubit(),
-          child: OrderConfirmationScreen(),
-        ),
-      ),
-    );
     emit(CheckoutUpdated());
   }
 
-  void showAddressBottomSheet(BuildContext context) {
-    showModalBottomSheet(
+  // Handle Accept button click
+  void handleAcceptOrder() {
+    isAccepted = true;
+    emit(CheckoutUpdated());
+  }
+
+  // Handle Reject button click
+  void handleRejectOrder() {
+    if (orderDetail != null) {
+      orderDetail = orderDetail!.copyWith(status: OrderDetailStatus.cancelled);
+      emit(CheckoutUpdated());
+    }
+  }
+
+  // Move to next order status
+  void moveToNextStatus() {
+    if (orderDetail != null) {
+      OrderDetailStatus nextStatus;
+      switch (orderDetail!.status) {
+        case OrderDetailStatus.processing:
+          nextStatus = OrderDetailStatus.onWay;
+          break;
+        case OrderDetailStatus.onWay:
+          nextStatus = OrderDetailStatus.delivered;
+          break;
+        case OrderDetailStatus.delivered:
+          return;
+        case OrderDetailStatus.cancelled:
+          return;
+      }
+
+      orderDetail = orderDetail!.copyWith(status: nextStatus);
+      emit(CheckoutUpdated());
+    }
+  }
+
+  // Get next status button text
+  String getNextStatusButtonText() {
+    if (orderDetail == null) return "prepared";
+
+    switch (orderDetail!.status) {
+      case OrderDetailStatus.processing:
+        return "processing";
+      case OrderDetailStatus.onWay:
+        return "on_way";
+      case OrderDetailStatus.delivered:
+        return "delivered";
+      case OrderDetailStatus.cancelled:
+        return "";
+    }
+  }
+
+  // Check if buttons should be shown
+  bool shouldShowButtons() {
+    if (orderDetail == null) return true;
+    return orderDetail!.status != OrderDetailStatus.delivered &&
+        orderDetail!.status != OrderDetailStatus.cancelled;
+  }
+
+  void showAddressBottomSheet(BuildContext context) async {
+    await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
@@ -92,8 +142,8 @@ class CheckoutCubit extends Cubit<CheckoutState> {
     );
   }
 
-  void showPhoneBottomSheet(BuildContext context) {
-    showDialog(
+  void showPhoneBottomSheet(BuildContext context) async {
+    await showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: Text('Edit Phone Number'),
@@ -129,12 +179,40 @@ class CheckoutCubit extends Cubit<CheckoutState> {
 
   void setOrderDetails(OrderDetailModel orderDetail) {
     this.orderDetail = orderDetail;
-    emit(CheckoutUpdated()); // Notify listeners about the change
+    emit(CheckoutUpdated());
   }
 
   @override
   Future<void> close() {
     promoController.dispose();
     return super.close();
+  }
+}
+
+// Extension to add copyWith method to OrderDetailModel
+extension OrderDetailModelExtension on OrderDetailModel {
+  OrderDetailModel copyWith({
+    OrderDetailStatus? status,
+    String? orderId,
+    String? orderDate,
+    String? deliveryAddress,
+    String? mobileNumber,
+    String? subtotal,
+    String? shipping,
+    String? total,
+    List<PaymentMethodModel>? paymentMethods,
+  }) {
+    return OrderDetailModel(
+      orderItems: orderItems,
+      status: status ?? this.status,
+      orderId: orderId ?? this.orderId,
+      orderDate: orderDate ?? this.orderDate,
+      deliveryAddress: deliveryAddress ?? this.deliveryAddress,
+      mobileNumber: mobileNumber ?? this.mobileNumber,
+      subtotal: subtotal ?? this.subtotal,
+      shipping: shipping ?? this.shipping,
+      total: total ?? this.total,
+      paymentMethods: paymentMethods ?? this.paymentMethods,
+    );
   }
 }

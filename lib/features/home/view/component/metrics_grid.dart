@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lasco/core/constants/app_colors.dart';
+import 'package:lasco/core/locale/app_loacl.dart';
 
 class MetricsGrid extends StatelessWidget {
   const MetricsGrid({super.key});
@@ -17,7 +18,7 @@ class MetricsGrid extends StatelessWidget {
       // childAspectRatio: 1.2,
       children: [
         _buildMetricCard(
-          title: "New Orders",
+          title: "new_orders".tr(context),
           value: "340",
           icon: SvgPicture.asset(
             "assets/images/svg/new-orders.svg",
@@ -26,7 +27,7 @@ class MetricsGrid extends StatelessWidget {
           color: Colors.blue,
         ),
         _buildMetricCard(
-          title: "Total Orders",
+          title: "total_orders".tr(context),
           value: "250",
           icon: SvgPicture.asset(
             "assets/images/svg/total-orders.svg",
@@ -35,7 +36,7 @@ class MetricsGrid extends StatelessWidget {
           color: Colors.green,
         ),
         _buildMetricCard(
-          title: "Total Income",
+          title: "total_income".tr(context),
           value: "250",
           icon: SvgPicture.asset(
             "assets/images/svg/total-incom.svg",
@@ -44,7 +45,7 @@ class MetricsGrid extends StatelessWidget {
           color: AppColors.orange,
         ),
         _buildMetricCard(
-          title: "Average Rating",
+          title: "average_rating".tr(context),
           value: "4.5",
           icon: SvgPicture.asset(
             "assets/images/svg/av-rating.svg",

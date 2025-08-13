@@ -6,7 +6,7 @@ import 'package:lasco/core/component/widgets/app_theme.dart';
 import 'package:lasco/core/cubit/global_cubit.dart';
 import 'package:lasco/core/cubit/global_state.dart';
 import 'package:lasco/core/locale/localization_settings.dart';
-import 'package:lasco/features/home/view/home_screen.dart';
+import 'package:lasco/features/base/views/splash_screen.dart';
 
 import '../services/service_locator.dart';
 
@@ -28,7 +28,7 @@ class LascoStore extends StatelessWidget {
             return MaterialApp(
               navigatorKey: navigatorKey,
               theme: AppTheme.getLightTheme(sl<GlobalCubit>().language),
-
+ini
               builder: (context, child) {
                 final mediaQueryData = MediaQuery.of(context);
                 final scale = mediaQueryData.textScaler
@@ -51,7 +51,7 @@ class LascoStore extends StatelessWidget {
 
               //!Routing
               // home: const SplashScreen(),
-              home: HomeScreen(),
+              home: SplashScreen(),
             );
           },
         );

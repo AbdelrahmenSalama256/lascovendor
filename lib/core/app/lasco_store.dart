@@ -28,7 +28,6 @@ class LascoStore extends StatelessWidget {
             return MaterialApp(
               navigatorKey: navigatorKey,
               theme: AppTheme.getLightTheme(sl<GlobalCubit>().language),
-ini
               builder: (context, child) {
                 final mediaQueryData = MediaQuery.of(context);
                 final scale = mediaQueryData.textScaler
